@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Bot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="./index.css">
+<script src="./index.js"></script>
+
+</head>
+<style>.chat-bar-collapsible {
+    position: fixed;
+    bottom: 0;
+    right: 50px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.collapsible {
+    background-color: rgb(82, 151, 255);
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+    width: 350px;
+    text-align: left;
+    outline: none;
+    font-size: 18px;
+    border-radius: 10px 10px 0px 0px;
+    border: 3px solid white;
+    border-bottom: none;
+}
+
+.content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+}
+
+.full-chat-block {
+    width: 350px;
+    background: white;
+    text-align: center;
+    overflow: auto;
+    scrollbar-width: none;
+    height: max-content;
+    transition: max-height 0.2s ease-out;
+}
+
+.outer-container {
+    min-height: 500px;
+    bottom: 0%;
+    position: relative;
+}
+
+.chat-container {
+    max-height: 500px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    scroll-behavior: smooth;
+    hyphens: auto;
+}
+
+.chat-container::-webkit-scrollbar {
+    display: none;
+}
+
+.chat-bar-input-block {
+    display: flex;
+    float: left;
+    box-sizing: border-box;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    background-color: rgb(235, 235, 235);
+    border-radius: 10px 10px 0px 0px;
+    padding: 10px 0px 10px 10px;
+}
+
+.chat-bar-icons {
+    display: flex;
+    justify-content: space-evenly;
+    box-sizing: border-box;
+    width: 25%;
+    float: right;
+    font-size: 20px;
+}
+
+#chat-icon:hover {
+    opacity: .7;
+}
+
+/* Chat bubbles */
+
+#userInput {
+    width: 75%;
+}
+
+.input-box {
+    float: left;
+    border: none;
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 16px;
+    color: #000;
+    background-color: white;
+    outline: none
+}
+
+.userText {
+    color: white;
+    font-family: Helvetica;
+    font-size: 16px;
+    font-weight: normal;
+    text-align: right;
+    clear: both;
+}
+
+.userText span {
+    line-height: 1.5em;
+    display: inline-block;
+    background: #5ca6fa;
+    padding: 10px;
+    border-radius: 8px;
+    border-bottom-right-radius: 2px;
+    max-width: 80%;
+    margin-right: 10px;
+    animation: floatup .5s forwards
+}
+
+.botText {
+    color: #000;
+    font-family: Helvetica;
+    font-weight: normal;
+    font-size: 16px;
+    text-align: left;
+}
+
+.botText span {
+    line-height: 1.5em;
+    display: inline-block;
+    background: #e0e0e0;
+    padding: 10px;
+    border-radius: 8px;
+    border-bottom-left-radius: 2px;
+    max-width: 80%;
+    margin-left: 10px;
+    animation: floatup .5s forwards
+}
+
+@keyframes floatup {
+    from {
+        transform: translateY(14px);
+        opacity: .0;
+    }
+    to {
+        transform: translateY(0px);
+        opacity: 1;
+    }
+}
+
+@media screen and (max-width:600px) {
+    .full-chat-block {
+        width: 100%;
+        border-radius: 0px;
+    }
+    .chat-bar-collapsible {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+    }
+    .collapsible {
+        width: 100%;
+        border: 0px;
+        border-top: 3px solid white;
+        border-radius: 0px;
+    }
+}
+
+html {
+    scroll-behavior: smooth;
+    font-family: Helvetica, sans-serif, Arial;
+}
+
+
+
+
+
+
+
+
+</style>
+<body>
+    <nav>
+        
+    
+   <img src="https://upload.wikimedia.org/wikipedia/en/3/3a/Mizoram_Police_Logo.png" alt="" srcset="" id="img" height="70" width="200">
+   <label for="logo" class="logo">Mizoram Police</label>
+        <ul>
+            <li><a href="" class="active">Home</a></li>
+            <li><a href="./parcials/about.php">About</a></li>
+            <li><a href="./parcials/upload.php"> Add FIR</a></li>
+           
+            
+    
+        </ul>
+    </nav>
+  
+    <body>
+
+        <div class="background">
+            <div class="bubble">
+                <span style="--i:11"></span>
+                <span style="--i:12"></span>
+                <span style="--i:13"></span>
+                <span style="--i:15"></span>
+                <span style="--i:17"></span>
+                <span style="--i:21"></span>
+                <span style="--i:32"></span>
+                <span style="--i:22"></span>
+                <span style="--i:11"></span>
+                <span style="--i:14"></span>
+                <span style="--i:16"></span>
+                <span style="--i:19"></span>
+                <span style="--i:17"></span>
+                <span style="--i:15"></span>
+                <span style="--i:1"></span>
+                <span style="--i:11"></span>
+                <span style="--i:12"></span>
+                <span style="--i:13"></span>
+                <span style="--i:15"></span>
+                <span style="--i:17"></span>
+                <span style="--i:21"></span>
+                <span style="--i:32"></span>
+                <span style="--i:22"></span>
+                <span style="--i:11"></span>
+                <span style="--i:14"></span>
+                <span style="--i:16"></span>
+                <span style="--i:19"></span>
+                <span style="--i:17"></span>
+                <span style="--i:15"></span>
+                <span style="--i:1"></span>
+                <span style="--i:11"></span>
+                <span style="--i:12"></span>
+                <span style="--i:13"></span>
+                <span style="--i:15"></span>
+                <span style="--i:17"></span>
+                <span style="--i:21"></span>
+                <span style="--i:32"></span>
+                <span style="--i:22"></span>
+                <span style="--i:11"></span>
+                <span style="--i:14"></span>
+                <span style="--i:16"></span>
+            
+          
+            </div>
+     
+            <a href="./parcials/about.php"><div  class="containercb">
+                <div class="button">About</div>
+            </div></a>
+            <div  class="containercb">
+                <div class="button">Laws</div>
+            </div>
+            <a href="./parcials/upload.php">
+            <div  class="containercb">
+                <div class="button">ADD FIR</div>
+            </div></a>
+            <div  class="containercb">
+                <div class="button">Mizoram Police</div>
+            </div>
+        </div>
+     
+          
+          
+    
+        </div>
+      <div class="large-box-for-instruction">
+        <div class="box-for-instruction">
+            <p>What are the types of cases in police? 
+                <br> There are different types of cases in police depending on the nature and severity of the offence, the procedure followed by the police, and the jurisdiction of the court. Some of the common types of cases in police are:
+
+               
+            </p>
+               <details>
+                Cognizable cases: These are cases where the police can arrest the accused without a warrant and start an investigation without the permission of a magistrate. These are usually serious offences such as murder, rape, robbery, etc12
+Non-cognizable cases: These are cases where the police cannot arrest the accused without a warrant or start an investigation without the order of a magistrate. These are usually minor offences such as trespassing, cheating, defamation, etc12
+<details>
+    Bailable cases: These are cases where the accused has a right to get bail from the police or the court. Bail is a security given by the accused to ensure his or her appearance before the court. The amount and conditions of bail depend on various factors such as the nature of the offence, the character of the accused, etc12
+Non-bailable cases: These are cases where the accused does not have a right to get bail from the police or the court. Bail can only be granted by the court at its discretion after considering various factors such as the gravity of the offence, the risk of tampering with evidence or witnesses, etc12
+Summary cases: These are cases where the trial is conducted by a magistrate without a jury or witnesses. These are usually minor offences such as causing a disturbance, petty theft, etc. The maximum punishment for these offences is six months imprisonment or a fine of Rs 2000 or both13
+Indictable cases: These are cases where the trial is conducted by a judge with or without a jury and with witnesses. These are usually serious offences such as theft, break and enter, murder, etc. The punishment for these offences can range from imprisonment for a term to death penalty in some cases13
+These are some of the types of cases in police that are commonly encountered in India and other countries. Each type of case has different legal implications and consequences for the accused and the victim.
+</details>
+               </details>  
+               
+       
+        </div>
+        <div class="box-for-instruction">
+            <p>What are the rights of a person arrested by the police?<br>
+                person arrested by the police has certain rights under the law that are meant to protect his or her dignity, liberty and human rights. Some of the rights of a person arrested by the police are:
+
+                </p>
+                 <details>Right to know the grounds of arrest: The police officer or any other person arresting a person without a warrant must inform the arrested person about the offence and the grounds for such arrest12 This right is also guaranteed by Article 22(1) of the Constitution of India3Right to be produced before a magistrate without unnecessary delay: The police officer making an arrest without a warrant must produce the arrested person before a magistrate having jurisdiction or an officer in charge of a police station within 24 hours of the arrest, excluding the time taken for travel14 This right is also guaranteed by Article 22(2) of the Constitution of India3
+                    Right to be released on bail: The arrested person has a right to be released on bail if the offence for which he or she is arrested is bailable. Bail is a security given by the arrested person or someone on his or her behalf to ensure his or her appearance before the court. The amount and conditions of bail depend on various factors such as the nature and gravity of the offence, the character and antecedents of the accused, etc12
+             
+                    <details>
+                    Right to a fair trial: The arrested person has a right to a fair trial by an impartial and competent court in accordance with the law. The trial must be conducted in an open court and in the presence of the accused. The accused has a right to be defended by a lawyer of his or her choice or by a legal aid lawyer if he or she cannot afford one. The accused also has a right to examine the witnesses and evidence against him or her and to produce his or her own witnesses and evidence in his or her defence. The accused also has a right to appeal against the conviction or sentence by a higher court123
+                    Right to consult a lawyer: The arrested person has a right to consult a lawyer of his or her choice during interrogation, investigation and trial. The lawyer can advise the arrested person about his or her rights and obligations under the law and can represent him or her before the court. The police officer must inform the arrested person of this right and allow him or her reasonable time and facilities to consult a lawyer12
+                    Right to free legal aid: The arrested person has a right to free legal aid if he or she cannot afford a lawyer. Free legal aid means providing legal services such as advice, representation, drafting of documents, etc., free of cost to eligible persons by lawyers appointed by the state or by voluntary organisations. The police officer must inform the arrested person of this right and provide him or her with necessary information and assistance to avail free legal aid125
+               
+                    <details>
+                    Right to remain silent: The arrested person has a right to remain silent during interrogation, investigation and trial. He or she cannot be compelled to answer any question or make any statement that may incriminate him or her. He or she can also refuse to sign any document that may be used against him or her as evidence. This right is based on the principle that no one can be forced to be a witness against himself or herself. This right is also guaranteed by Article 20(3) of the Constitution of India123
+                    Right to be examined by a medical practitioner: The arrested person has a right to be examined by a medical practitioner at the time of arrest and at any time during custody. The medical examination is done to ascertain the physical and mental condition of the arrested person and to detect any injuries, illnesses or signs of torture or ill-treatment. The medical report must be recorded in writing and given to the arrested person and his or her lawyer. The medical examination must be done by an independent and qualified doctor in accordance with professional ethics and standards12</details>
+                    </details>
+                    </details>
+          
+        </div>
+      </div>
+      <div class="large-box-for-instruction">
+        <div class="box-for-instruction">
+            <p>What are the duties of the police during arrest?<br>The police have certain duties and responsibilities during arrest that are meant to ensure the lawfulness, fairness and transparency of the arrest process. Some of the duties of the police during arrest are:</p>
+               <details>
+                To inform the arrested person about the offence and the grounds for such arrest12 This duty is based on Section 50 of the Code of Criminal Procedure (CrPC) and Article 22(1) of the Constitution of India3
+                To produce the arrested person before a magistrate within 24 hours of the arrest, excluding the time taken for travel14 This duty is based on Section 57 of the CrPC and Article 22(2) of the Constitution of India3
+                To inform the arrested person of his or her right to consult a lawyer and to provide him or her reasonable time and facilities to do so12 This duty is based on Section 41D of the CrPC and Article 22(1) of the Constitution of India3
+                To inform the arrested person of his or her right to free legal aid if he or she cannot afford a lawyer and to provide him or her with necessary information and assistance to avail it125 This duty is based on Section 304 of the CrPC and Article 39A of the Constitution of India3
+                <details>
+                To inform a nominated person of the arrested person’s choice about his or her arrest and place of detention as soon as possible12 This duty is based on Section 50A of the CrPC.
+                To examine the arrested person by a medical practitioner at the time of arrest and at any time during custody and to record and provide a copy of the medical report to the arrested person and his or her lawyer12 This duty is based on Section 54 of the CrPC.
+                To treat the arrested person with dignity and respect and to refrain from any torture, ill-treatment or coercion that may violate his or her human rights12 This duty is based on various national and international laws and conventions such as the Indian Evidence Act, 1872, the Protection of Human Rights Act, 1993, the Convention against Torture and Other Cruel, Inhuman or Degrading Treatment or Punishment, 1984, etc.
+               </details>  
+            </details>
+        </div>
+        <div class="box-for-instruction">
+            <p>What is bail?<br>Bail is the conditional release of a person accused of a crime, for an amount, pledged for the appearance of the accused when the time comes.</p>
+                 <details> The person paying the money acts as the surety12. Bail is not a free pass out of the criminal trial, but a way to ensure that the accused does not suffer unnecessary detention before being proven guilty.
+<details>
+                    There are three types of bail in India123:
+                    
+                    Regular bail: This is granted to a person who has been arrested or is in police custody. A bail application can be filed for the regular bail under section 437 and 439 of Code of Criminal Procedure (CrPC).
+                    Interim bail: This is granted as a temporary means and granted for a short period of time, either during the time of pendency of an application or when the application of anticipatory or regular bail is pending before the court.
+                    Anticipatory bail: This is granted to a person who apprehends arrest by the police for a non-bailable offence. A bail application can be filed for the anticipatory bail under section 438 of CrPC.
+                    <details>
+                    The grant of bail depends on various factors, such as the nature and gravity of the offence, the character and antecedents of the accused, the possibility of tampering with evidence or witnesses, etc. The court has the discretion to impose certain conditions on the bail, such as reporting to the police station, surrendering passport, etc.</details>
+                    </details>
+</details>
+          
+        </div>
+        </div>
+    </div>
+    <div  class="containercb2">
+        <div class="button2">Ask your QUERRY On the ChatBot Given below</div>
+    </div>
+        <!-- CHAT BAR BLOCK -->
+        <div class="footer">
+            <label for="" class="label"> helpline source</label>
+              <li>mobile number:979866960</li>
+              <li>Police station number:</li>
+              <li>Fire station number:</li>
+              <li>Emergency Number:</li>
+              <li>@gmail.com</li>
+        </div>
+      
+        <div class="chat-bar-collapsible">
+            <button id="chat-button" type="button" class="collapsible">Police Assistance Chatbot!
+                <i id="chat-icon" style="color: #fff;" class="fa fa-fw fa-comments-o"></i>
+            </button>
+    
+            <div class="content">
+                <div class="full-chat-block">
+                    <!-- Message Container -->
+                    <div class="outer-container">
+                        <div class="chat-container">
+                            <!-- Messages -->
+                            <div id="chatbox">
+                                <h5 id="chat-timestamp"></h5>
+                                <p id="botStarterMessage" class="botText"><span>Loading...</span></p>
+                            </div>
+    
+                            <!-- User input box -->
+                            <div class="chat-bar-input-block">
+                                <div id="userInput">
+                                    <input id="textInput" class="input-box" type="text" name="msg"
+                                        placeholder="Tap 'Enter(1 or 2 or 3 like' to send a message">
+                                    <p></p>
+                                </div>
+    
+                                <div class="chat-bar-icons">
+                                    <i id="chat-icon" style="color: crimson;" class="fa fa-fw fa-heart"
+                                        onclick="heartButton()"></i>
+                                    <i id="chat-icon" style="color: #333;" class="fa fa-fw fa-send"
+                                        onclick="sendButton()"></i>
+                                </div>
+                            </div>
+    
+                            <div id="chat-bar-bottom">
+                                <p></p>
+                            </div>
+    
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+    
+        </div>
+           
+    </html>
+    </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+ <script>
+    var coll = document.getElementsByClassName("collapsible");
+
+for (let i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function () {
+        this.classList.toggle("active");
+
+        var content = this.nextElementSibling;
+
+        if (content.style.maxHeight) {
+            content.style.maxHeight = null;
+        } else {
+            content.style.maxHeight = content.scrollHeight + "px";
+        }
+
+    });
+}
+
+function getTime() {
+    let today = new Date();
+    hours = today.getHours();
+    minutes = today.getMinutes();
+
+    if (hours < 10) {
+        hours = "0" + hours;
+    }
+
+    if (minutes < 10) {
+        minutes = "0" + minutes;
+    }
+
+    let time = hours + ":" + minutes;
+    return time;
+}
+
+// Gets the first message
+function firstBotMessage() {
+    let firstMessage = "Ask your Query?<br>Select from these topic <br>ex.write 3 For LAWS<br>in search box"
+    let secondMessage="<br> 1=FIR  <br> 2=Cases  <br>   3=LAWS of police"
+    document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'\n'+secondMessage+ '</span></p>';
+ 
+
+    let time = getTime();
+
+    $("#chat-timestamp").append(time);
+    document.getElementById("userInput").scrollIntoView(false);
+}
+
+firstBotMessage();
+
+// Retrieves the response
+function getHardResponse(userText) {
+    let botResponse = getBotResponse(userText);
+    let botHtml = '<p class="botText"><span>' + botResponse + '</span></p>';
+    $("#chatbox").append(botHtml);
+
+    document.getElementById("chat-bar-bottom").scrollIntoView(true);
+}
+
+//Gets the text text from the input box and processes it
+function getResponse() {
+    let userText = $("#textInput").val();
+
+    if (userText == "") {
+        userText = "I love Indian Police!";
+    }
+
+    let userHtml = '<p class="userText"><span>' + userText + '</span></p>';
+
+    $("#textInput").val("");
+    $("#chatbox").append(userHtml);
+    document.getElementById("chat-bar-bottom").scrollIntoView(true);
+
+    setTimeout(() => {
+        getHardResponse(userText);
+    }, 1000)
+
+}
+
+// Handles sending text via button clicks
+function buttonSendText(sampleText) {
+    let userHtml = '<p class="userText"><span>' + sampleText + '</span></p>';
+
+    $("#textInput").val("");
+    $("#chatbox").append(userHtml);
+    document.getElementById("chat-bar-bottom").scrollIntoView(true);
+
+    //Uncomment this if you want the bot to respond to this buttonSendText event
+    // setTimeout(() => {
+    //     getHardResponse(sampleText);
+    // }, 1000)
+}
+
+function sendButton() {
+    getResponse();
+}
+
+function heartButton() {
+    buttonSendText("Heart clicked!")
+}
+
+// Press enter to send a message
+$("#textInput").keypress(function (e) {
+    if (e.which == 13) {
+        getResponse();
+    }
+});
+
+function getBotResponse(input) {
+    //rock paper scissors
+    if (input == "rock") {
+        return "paper";
+    } else if (input == "paper") {
+        return "scissors";
+    } else if (input == "scissors") {
+        return "rock";
+    }
+
+    // Simple responses
+    if (input == "LAWS OF POLICE"||input==3||input=="Laws of police"||input=="laws of police") {
+       
+        let firstMessage = "Laws of police are the rules and regulations that govern the conduct and behavior of law enforcement officials. They also define the rights and duties of the citizens in relation to the police. Laws of police vary from country to country, depending on the legal system and the historical context  <br>In India, laws of police are mainly derived from the Indian Police Act of 186  <br>which was enacted by the British colonial government to establish a centraliz  <br>and uniform police force in India1. <br>The Police Complaints Authority Act, 2006, which creates independent bodies   <br>the state and district levels to inquire into complaints against poli  <br>personnel for serious misconduct or abuse of powe  <br>The Scheduled Castes and Scheduled Tribes (Prevention of Atrocities) Act, 198  <br>which provides for special provisions for the protection of SCs and STs fr  <b  <br>trocities by public servants or other  <br>The Information Technology Act, 2000, which deals with cyber crimes a  <br>offences involving computers and electronic device  <br>The Unlawful Activities (Prevention) Act, 1967, which empowers the centr  <br>government to declare any association or activity as unlawful and to ban   <br>regulate them.<br>Asked another topic 14= Code of Criminal Procedure<br>15=Indian Evidence Act<br>16=Police Complaints Authority Act, 2006"
+
+   
+    return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+ 
+    } 
+    if (input == "cases"||input==2||input=="Cases"||input=="CASES") {
+       
+       let firstMessage = "Case Name<br>4=a case of murder<br>5= a case of robber<br>6= a case of rape <br>7=a case of kidnapping <br>7= a case of assault <br>8=a case of fraud <br>9=a case of drug trafficking<br>10=a case of cybercrime<br>11=a case of riotinga case of terroris";
+  
+   return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+
+   } 
+ if(input==12||input=="How to write FIR"){
+    let firstMessage = "FIR is an important document that can be used as evidence in court. It should contain the following details3:<br>Name and address of the informan<br>Date, time and place of the inciden<br>Details of the inciden<br>Name and description of the people involved in the inciden<br>Any other relevant informatio<br>FIR can be filed by any person who is a victim, witness or has knowledge of <br>cognizable offence. It can be filed either by presenting physically before th<br>police or by phone or email13. The person filing an FIR has the right to deman<br>a copy of it for free13. If the police refuse to file an FIR, the person ca<br>send a written complaint by post to the Superintendent of Police, who ca<br>direct an investigation if satisfied that a cognizable offence has taken place<br>";
+   
+   return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+ }
+ else if (input == "FIR"||input==1) {
+        let firstMessage = "Which Type of FIR ?<Br>There are two types of FIR in India1:Regular FIR: This is filed when the police receive information about a cognizable offence that has already taken place. The police officer in charge of the police station has to record the information in writing and sign it. The informant also has to sign the document and get a copy of it for free. The police officer then has to enter the information in a book and start the investigation.<br>Zero FIR: This is filed when the police receive information about a cognizable offence that has taken place outside their jurisdiction. This type of FIR was introduced to avoid delay and denial of justice in serious and heinous crimes1. is an important document that can be used as evidence in court.<br>Asked another point<br> 12= How to write FIR?<br>13=What is different between FIR and complaint?";
+   
+   return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+    }
+    else if(input=="a case of kidnapping"||input==7){
+      let firstMessage=" In case of kidnapping, the police have the duty to investigate the crime, rescue the victim, and arrest the kidnapper. Some of the steps that the police may take are:<br>Registering an FIR based on the information given by the informant or the complainant1<br>Searching for clues and evidence at the crime scene and other locations related to the kidnapping1.<br>xamining and questioning witnesses who may have seen or heard something relevant to the kidnapping1<br>Tracing phone calls or messages that may have been made by the kidnapper or the victim2<br>Coordinating with other law enforcement agencies such as the Federal Bureau o<br>Investigation (FBI) in the United States or the National Crime Agency (NCA) i<br>the United Kingdom, if the kidnapping involves crossing state or national borders23<br>Negotiating with the kidnapper if he demands ransom or other concessions fo<br>releasing the victim4<br>Raiding the kidnapper’s hideout and rescuing the victim by force if necessary1<br>Charging and prosecuting the kidnapper for the offence of kidnapping, which i<br>a very serious felony punishable by a long prison sentence or death<br>";
+  return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+    }
+ else if(input==13){
+    let firstMessage = "The main difference between a complaint and an FIR is that a complaint is an allegation made by any person to the magistrate about the commission of an offence, while an FIR is the information given to the police officer about the commission of a cognizable offence12.<br>A complaint can be made for both cognizable and non-cognizable offences, but a<br>FIR can only be made for cognizable offences12. A complaint can be made in an<br>format, but an FIR has to follow a prescribed format12. A complaint is made t<br>the metropolitan magistrate, while an FIR is made to the officer in charge o<br>the police station12.<br>A complaint does not necessarily lead to an investigation, but an FIR initiates<br>he investigation by the police23. A complaint can be made by any person<br>subject to certain exceptions, while an FIR can be made by the aggrieved party<br>witness or any person having knowledge of the offence";
+   
+   return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+ }
+ else if(input=8||input=="a case of fraud"){
+  let firstMessage="In case of a case of fraud, the police have the duty to investigate the crime, recover the money or property, and arrest the fraudster. Some of the steps that the police may take are:<br>Registering an FIR based on the information given by the informant or th<br>complainant1<br>Searching for clues and evidence at the crime scene and other locations relate<br>to the fraud1<br>Examining and questioning witnesses who may have seen or heard somethin<br>relevant to the fraud1<br>Tracing bank accounts or transactions that may have been used by the fraudste<br>or the victim1<br>Coordinating with other law enforcement agencies such as the Cyber Crime Porta<br>in India or the Federal Trade Commission (FTC) in the United States, if th<br>fraud involves online or cross-border activities23<br>egotiating with the fraudster if he agrees to return the money or property o<br>cooperate with the investigation1<br>Raiding the fraudster’s hideout and recovering the money or property by forc<br>if necessary1<br>Charging and prosecuting the fraudster for the offence of fraud, which is <br>serious offence punishable by imprisonment, fine, or both1<br>The police are expected to act promptly and efficiently in case of fraud, as i<br>is a serious offence that harms the financial well-being of a person. The<br>olice are also bound by various laws and regulations that protect the right<br>of both the victim and the fraudster. The police should not use illegal o<br>unethical methods to obtain information or confessions from the fraudster. Th<br>police should also respect the privacy and dignity of the victim and provid<br>him with assistance and support if needed. The police should also keep th<br>informant or the complainant informed about the progress of the case an<br>cooperate with them in recovering their money or property.";
+  return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+ }
+ else if(input=9||input=="a case of drug trafficking"){
+  let firstMessage="In case of a case of drug trafficking, the police have the duty to investigate the crime, seize the drugs, and arrest the trafficker. Some of the steps that the police may take are:<br>Searching for clues and evidence at the crime scene and other locati<br>related to the drug trafficking1<br>Examining and questioning witnesses who may have seen or heard someth<br>relevant to the drug trafficking1<br>Tracing drug routes or transactions that may have been used by <br>trafficker or the buyer1<br>Registering an FIR based on the information given by the informant or the complainan<br>Coordinating with other law enforcement agencies such as Interpol or the D<br>Enforcement Administration (DEA) in the United States, if the drug trafficki<br>nvolves crossing state or national borders<br>Using informants or undercover agents to infiltrate the drug network and m<br>direct, controlled, or observed drug sales with the trafficke<br>Raiding the trafficker’s hideout and seizing the drugs by force if necessar<br>Charging and prosecuting the trafficker for the offence of drug trafficki<br>which is a serious offence punishable by imprisonment, fine, or both1.";
+  return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+ }
+ else if(input=10||input=="a case of cybercrime"){
+  let firstMessage="";
+  return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+ }
+ else if(input=11||input=="a case of riotinga case of terroris"){
+  let firstMessage="";
+  return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+ }
+else if(input==5||input=="a case of robber"){
+  let firstMessage="A case of robber can mean different things depending on the context. It could mean:<br>A legal case involving the crime of robbery, which is the unlawful taking awa<br>of personal property from a person by violence or by threat of violence tha<br>causes fear12<br>A situation or an example of robbery, which is the act or practice of robbing<br>or stealing from a person using force or making them think force will be used3<br>A person who commits robbery, which is someone who steals4 or the offender fo<br>committing theft or for carrying away or attempting to carry away the loote<br>property, voluntarily causes or attempts to cause death or hurt or wrongfu<br>restraint<br>";
+  return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+}else if(input=14||input=="Code of Criminal Procedure"){
+  let firstMessage="which lays down the procedures for investigation, arrest, bail, trial, and appeal in criminal cases";
+  return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+ }else if(input=15||input=="Indian Evidence Act"){
+  let firstMessage="which defines the offences and punishments for various crimes.";
+  return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+ }else if(input=4||input=="Indian Evidence Act"){
+  let firstMessage="which defines the offences and punishments for various crimes.";
+  return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+ }
+ else if(input=16||input=="Police Complaints Authority Act, 2006"){
+  let firstMessage="which creates independent bodies at the state and district levels to inquire into complaints against police personnel for serious misconduct or abuse of power.";
+  return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+ }
+ else if(input=6||input=="a case of rape"){
+  let firstMessage=".";
+  return document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage +'</span></p>';
+ }
+     else {
+        return "Try asking something else!";
+    }
+}
+
+ </script>
+<style>
+    .large-box-for-instruction{
+     
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+    .box-for-instruction{
+  
+background-color: rgb(0, 170, 255);
+margin-left: 15px;
+margin-top: 10px;
+
+box-shadow: 5px 5px 5px 5px rgb(58, 56, 56);
+padding: 10px 10px 10px 10px;
+
+ }
+.img{
+    width:300px;
+    height:50px ;
+}
+    .containerbr{
+        width: 100px;
+    height:30px;
+  background-color: rgb(25, 25, 18);
+    border: 5px solid rgb(43, 230, 240);
+    text-align: center;
+    justify-items: center;
+padding-top: 10px;
+    font-size: larger;
+    border-radius: 30px;
+    color: rgb(22, 187, 241);
+    cursor: pointer;
+  float: right;
+ bottom: 0px;
+
+    
+    }
+    .containerbx{
+        width: 150px;
+    height:40px;
+  background-color: rgb(25, 25, 18);
+    border: 5px solid rgb(43, 230, 240);
+    text-align: center;
+    justify-items: center;
+padding-top: 10px;
+    font-size: larger;
+    border-radius: 30px;
+    color: rgb(22, 187, 241);
+    cursor: pointer;
+position: relative;
+ 
+    
+    }
+    .containerb:hover{
+       transition: 4sec;
+        transform: scale(0.7);
+        box-shadow: 3px 3px 3px 3px rgb(28, 179, 234);
+        color: azure;
+    }
+    .containerbr:hover{
+       transition: 4sec;
+        transform: scale(0.7);
+        box-shadow: 3px 3px 3px 3px rgb(103, 189, 221);
+        color: azure;
+    }
+    .containercb{
+        width: 20vb;
+    height:30px;
+  background-color: rgb(5, 25, 18);
+    border: 5px solid rgb(43, 230, 240);
+    text-align: center;
+    justify-items: center;
+padding-top: 10px;
+    font-size: larger;
+    border-radius: 30px;
+    color: rgb(22, 187, 241);
+    cursor: pointer;
+ 
+  
+  animation: animate2 5s linear infinite;
+ animation-direction: alternate-reverse;
+display: flex;
+flex-direction: row;
+float: left;
+justify-content: space-between;
+
+    
+    }
+    .containercb2{
+        width: 90%;
+    height:30px;
+  background-color: rgb(25, 25, 18);
+    border: 5px solid rgb(43, 230, 240);
+    text-align: center;
+    justify-items: center;
+padding-top: 10px;
+    font-size: 15px;
+    border-radius: 30px;
+    color: rgb(22, 187, 241);
+    cursor: pointer;
+    margin: 20px;
+ }
+    .cointainercb div{
+  align-content: center;
+  align-items: center;
+  margin-left: 10px;
+
+    }
+    @keyframes animate2 {
+        0%{
+            transform: translateY(10vh) scale(.7);
+        }
+        100%{
+            transform: translatey(2vh) scale(.5);
+        }
+    }
+    .containercb:hover{
+       transition: 4sec;
+        transform: scale(0.7);
+        box-shadow: 3px 3px 3px 3px rgb(28, 179, 234);
+        color: azure;
+    }
+    #open{
+        float:right;
+        margin-right: 10px;
+    }
+    @media only screen and (max-width:600px){
+nav li{
+display: none;
+}
+
+
+}
+
+@media only screen and (min-width:610px){
+
+  .dropdown-menu li{
+  display: none;
+}
+
+
+
+}
+
+</style>
+<style>
+    .button{
+        align-items: center;
+        justify-content: center;
+    }
+    *{
+        margin: 0px;
+        padding: 0px;
+        text-decoration: none;
+    }
+ 
+    .background{
+        position:relative;
+        width: 100%;
+        height: 30vh;
+        background-color: black;
+        padding-top: 10px;
+        text-align: center;
+        justify-content: space-between;
+    }
+    .bubble{
+       display: flex;
+       position: relative;
+       margin-top: 1px;
+    }
+    .bubble span{
+  position: relative;
+  width: 35px;
+  height: 30px;
+  background: rgb(24, 153, 245);
+  margin:0;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgb(100, 245, 163),
+  0 0 50px rgb(100, 235, 245),
+  0 0 100px rgb(19, 147, 232);
+  animation: animate 15s linear infinite;
+  animation: animate 15s linear infinite;
+  animation-duration: calc(80s / var(--i));
+
+    }
+.bubble span:nth-child(even){
+    background: rgb(240, 6, 6);
+    box-shadow: 0 0 10px rgb(245, 100, 100),
+  0 0 50px rgb(245, 136, 100),
+  0 0 100px rgb(232, 33, 19);
+}
+    @keyframes animate {
+        0%{
+            transform: translateY(30vh) scale(0);
+        }
+        100%{
+            transform: translatey(5vh) scale(1);
+        }
+    }
+</style>
+<style>
+    nav{
+        padding: -10px;
+        margin-top: 0px;
+        background-color: aqua;
+        height: 80px;
+        width: 100%;
+      font-size: 15px;
+  align-items: center;
+      justify-items: center;
+    }
+    label.logo{
+    font-size: xx-large;
+        width: 100vh;
+        height: 8vh;
+    }
+    nav ul{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+       list-style: none;
+ 
+        float: right;
+        padding: 10px 10px ;
+        font-weight: 20px;
+       
+    }
+    nav ul li{
+        text-decoration: none;
+        margin-left: 30px;
+      
+    }
+    nav ul li a{
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        text-align: center;
+       color: rgb(15, 15, 15);
+       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ padding-left: 5px;
+        
+    }
+   a.active, a:hover{
+        background-color: rgb(21, 131, 227);
+        color: rgb(87, 111, 247);
+       border-radius: 5px;
+     padding-left: 4px;
+     padding-right: 5px;
+transition: .3s;
+color: #fdf7f7;
+    }
+  .footer{
+   width: 100%;
+   background-color: rgb(123, 0, 255);
+   height: auto;
+margin: 1% ;
+   float: left;
+   padding: 10px;
+   color: aliceblue;
+   bottom: 0px;
+   display: block;
+  }  
+  .footer li{
+    display: flex;
+        flex-direction: row;
+        justify-content: center;
+       list-style: none;
+        float: left;
+        margin: 5px;
+  }
+  .label{
+    font-size: x-large;
+    color: rgb(15, 15, 16);
+    margin-bottom: 3px;
+    animation-duration: 2sec;
+    
+  }
+  .containerb{
+        width: 150px;
+    height:40px;
+  background-color: rgb(25, 25, 18);
+    border: 5px solid rgb(43, 230, 240);
+    text-align: center;
+    justify-items: center;
+padding-top: 10px;
+    font-size: larger;
+    border-radius: 30px;
+    color: rgb(14, 178, 233);
+    cursor: pointer;
+  float: right;
+  margin: 10%;
+  margin-bottom: 1px;
+
+    
+    }
+    .containerb a{
+color: aliceblue;
+    }
+</style>
+
+</html>
